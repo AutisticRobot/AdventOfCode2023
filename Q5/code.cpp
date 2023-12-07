@@ -11,17 +11,22 @@ std::ifstream inFile;
 std::string curLine;
 int total = 0;
 int curNum;
+int lineSize;
 int gameState = 0;// 0 - 1st line, 1 - middle line, 2 - last line
 int lineNum = 0;
 char *ALine;
 char *BLine;
 char *CLine;
+char *linePoint;
+char scanBloc[3][5];
 
 
 
 bool processLine();
 void firstLineSetup();
-void stringToCharArr(char inArr[]);
+void stringToCharArr(char inArr[]);//turns string curLine into char array inArr[]
+void proSymbol(int symPos);
+char getPos(int pos, int line);//helper function for filling out scan bloc
 
 int main(int argc, char *argv[])
 {
@@ -39,6 +44,10 @@ int main(int argc, char *argv[])
     
     if(inFile.is_open())
     {
+        if(std::getline(inFile,curLine))
+        {
+            firstLineSetup();
+        }
         while (std::getline(inFile,curLine))
         {
             processLine();
@@ -66,23 +75,50 @@ int main(int argc, char *argv[])
 bool processLine()
 {
 
-    if(gameState == 0)
+
+    switch (lineNum%2)
     {
-        firstLineSetup();
-        return true;
+        case 0:
+        linePoint = ALine;
+
+        break;
+        case 1:
+        linePoint = BLine;
+
+        break;
+        case 2:
+        linePoint = CLine;
+
+
+            if(doLog)
+            {
+                std::cout << "switch case 2" << std::endl;
+            }
+        break;
     }
 
+    for(int i=0;i<lineSize;i++)
+    {
+        if(!(std::isdigit(linePoint[i]) || linePoint[i] == '.'))
+        {
+            proSymbol(i);
+        }
+    }
+
+    if(gameState == 1)
+    {
+
+    }
 
     return true;
 }
 
 void firstLineSetup()
 {
-    gameState = 1;
-
-    ALine = new char[curLine.size()] {'N'};
-    BLine = new char[curLine.size()] {'N'};
-    CLine = new char[curLine.size()] {'N'};
+    lineSize = curLine.size();
+    ALine = new char[lineSize] {'N'};
+    BLine = new char[lineSize] {'N'};
+    CLine = new char[lineSize] {'N'};
         if(doLog)
         {
             std::cout << ALine[0] << std::endl;
@@ -94,8 +130,56 @@ void firstLineSetup()
 
 void stringToCharArr(char inArr[])
 {
-    for(int i=0;i<curLine.size();i++)
+    for(int i=0;i<lineSize;i++)
     {
         inArr[i] = curLine[i];
     }
+}
+
+
+void proSymbol(int symPos)
+{
+    int fillPos = 0;
+    int Loffset = 0;
+    int Roffset = 0;
+    if(symPos < 2)
+    {
+        Loffset = 2 - symPos;
+    }
+    if(symPos > (lineSize - 2))
+    {
+        Roffset = (lineSize - 2) - symPos;
+    }
+
+
+    while (fillPos <= 14)
+    {
+        int line = fillPos/5;
+        int pos = fillPos%5;
+        scanBloc[line][pos] = getPos(pos, line);
+        fillPos++;
+    }
+
+    if(doLog)
+    {
+        std::cout << scanBloc[0] << ',';
+        std::cout << scanBloc[1] << ',';
+        std::cout << scanBloc[2] << ',';
+    }
+
+}
+
+char getPos(int pos,int line)
+{
+
+    if(line == 0 && gameState == 0)
+    {
+        return '.';
+    }
+    if(line == 2 && gameState == 2)
+    {
+        return '.';
+    }
+
+    return (char)pos;
 }
