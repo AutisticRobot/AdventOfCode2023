@@ -17,8 +17,10 @@ int lineNum = 0;
 char *ALine;
 char *BLine;
 char *CLine;
-char *linePoint;
+char *linePoint[3];
 char scanBloc[3][5];
+int Loffset = 0;
+int Roffset = 0;
 
 
 
@@ -26,7 +28,7 @@ bool processLine();
 void firstLineSetup();
 void stringToCharArr(char inArr[]);//turns string curLine into char array inArr[]
 void proSymbol(int symPos);
-char getPos(int pos, int line);//helper function for filling out scan bloc
+char getPos(int pos, int line, int offset);//helper function for filling out scan bloc
 
 int main(int argc, char *argv[])
 {
@@ -51,6 +53,7 @@ int main(int argc, char *argv[])
         while (std::getline(inFile,curLine))
         {
             processLine();
+            gameState = 1;
             lineNum++;
         if(doLog)
         {
@@ -79,15 +82,21 @@ bool processLine()
     switch (lineNum%2)
     {
         case 0:
-        linePoint = ALine;
+        linePoint[0] = CLine;
+        linePoint[1] = ALine;
+        linePoint[2] = BLine;
 
         break;
         case 1:
-        linePoint = BLine;
+        linePoint[0] = ALine;
+        linePoint[1] = BLine;
+        linePoint[2] = CLine;
 
         break;
         case 2:
-        linePoint = CLine;
+        linePoint[0] = BLine;
+        linePoint[1] = CLine;
+        linePoint[2] = ALine;
 
 
             if(doLog)
@@ -97,10 +106,13 @@ bool processLine()
         break;
     }
 
+    stringToCharArr(linePoint[1]);
+
     for(int i=0;i<lineSize;i++)
     {
-        if(!(std::isdigit(linePoint[i]) || linePoint[i] == '.'))
+        if(!(std::isdigit(linePoint[1][i]) || linePoint[1][i] == '.'))
         {
+            std::cout << "process symbol:" << linePoint[1][i] << std::endl;
             proSymbol(i);
         }
     }
@@ -140,15 +152,17 @@ void stringToCharArr(char inArr[])
 void proSymbol(int symPos)
 {
     int fillPos = 0;
-    int Loffset = 0;
-    int Roffset = 0;
     if(symPos < 2)
     {
         Loffset = 2 - symPos;
+    }else{
+        Loffset = 0;
     }
-    if(symPos > (lineSize - 2))
+    if(symPos > (lineSize - 3))
     {
-        Roffset = (lineSize - 2) - symPos;
+        Roffset = (lineSize - 3) - symPos;
+    }else{
+        Roffset = 0;
     }
 
 
@@ -156,30 +170,41 @@ void proSymbol(int symPos)
     {
         int line = fillPos/5;
         int pos = fillPos%5;
-        scanBloc[line][pos] = getPos(pos, line);
+        scanBloc[line][pos] = getPos(pos, line, symPos);
+        if(doLog)
+        {
+            std::cout << scanBloc[line][pos];
+            if(pos == 4)
+            {
+                std::cout << ";" << gameState << "\n";
+            }
+        }
         fillPos++;
     }
 
-    if(doLog)
-    {
-        std::cout << scanBloc[0] << ',';
-        std::cout << scanBloc[1] << ',';
-        std::cout << scanBloc[2] << ',';
-    }
 
 }
 
-char getPos(int pos,int line)
+char getPos(int pos,int line,int offset)
 {
 
     if(line == 0 && gameState == 0)
     {
-        return '.';
+        return 'X';
     }
     if(line == 2 && gameState == 2)
     {
-        return '.';
+        return 'X';
+    }
+    if(pos < Loffset)
+    {
+        return 'X';
+    }
+    if(pos > (Roffset + 4))
+    {
+        return 'X';
     }
 
-    return (char)pos;
+    offset -= 2;
+    return linePoint[line][pos+offset];
 }
