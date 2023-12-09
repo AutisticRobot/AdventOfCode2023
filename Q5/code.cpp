@@ -18,7 +18,7 @@ char *ALine;
 char *BLine;
 char *CLine;
 char *linePoint[3];
-char scanBloc[3][5];
+char scanBloc[3][7];
 int Loffset = 0;
 int Roffset = 0;
 
@@ -29,6 +29,7 @@ void firstLineSetup();
 void stringToCharArr(char inArr[]);//turns string curLine into char array inArr[]
 void proSymbol(int symPos);
 char getPos(int pos, int line, int offset);//helper function for filling out scan bloc
+void scanBlocAt(int pos);
 
 int main(int argc, char *argv[])
 {
@@ -79,7 +80,7 @@ bool processLine()
 {
 
 
-    switch (lineNum%2)
+    switch (lineNum%3)
     {
         case 0:
         linePoint[0] = CLine;
@@ -97,16 +98,10 @@ bool processLine()
         linePoint[0] = BLine;
         linePoint[1] = CLine;
         linePoint[2] = ALine;
-
-
-            if(doLog)
-            {
-                std::cout << "switch case 2" << std::endl;
-            }
         break;
     }
 
-    stringToCharArr(linePoint[1]);
+    stringToCharArr(linePoint[2]);
 
     for(int i=0;i<lineSize;i++)
     {
@@ -131,10 +126,6 @@ void firstLineSetup()
     ALine = new char[lineSize] {'N'};
     BLine = new char[lineSize] {'N'};
     CLine = new char[lineSize] {'N'};
-        if(doLog)
-        {
-            std::cout << ALine[0] << std::endl;
-        }
     stringToCharArr(ALine);
 
 }
@@ -152,36 +143,40 @@ void stringToCharArr(char inArr[])
 void proSymbol(int symPos)
 {
     int fillPos = 0;
-    if(symPos < 2)
+    if(symPos < 3)
     {
-        Loffset = 2 - symPos;
+        Loffset = 3 - symPos;
     }else{
         Loffset = 0;
     }
-    if(symPos > (lineSize - 3))
+    if(symPos > (lineSize - 4))
     {
-        Roffset = (lineSize - 3) - symPos;
+        Roffset = (lineSize - 4) - symPos;
     }else{
         Roffset = 0;
     }
 
 
-    while (fillPos <= 14)
+    while (fillPos <= 20)
     {
-        int line = fillPos/5;
-        int pos = fillPos%5;
+        int line = fillPos/7;
+        int pos = fillPos%7;
         scanBloc[line][pos] = getPos(pos, line, symPos);
         if(doLog)
         {
             std::cout << scanBloc[line][pos];
-            if(pos == 4)
+            if(pos == 6)
             {
-                std::cout << ";" << gameState << "\n";
+                std::cout << ";" << gameState << ',' << lineNum % 3 << "\n";
             }
         }
         fillPos++;
     }
 
+    for(int i=0;i<9;i++)
+    {
+        scanBlocAt(i);
+    }
 
 }
 
@@ -200,11 +195,23 @@ char getPos(int pos,int line,int offset)
     {
         return 'X';
     }
-    if(pos > (Roffset + 4))
+    if(pos > (Roffset + 6))
     {
         return 'X';
     }
 
-    offset -= 2;
+    offset -= 3;
     return linePoint[line][pos+offset];
+}
+
+void scanBlocAt(int pos)
+{
+    int line = pos / 3;
+    int col = pos % 3;
+
+    if(std::isdigit(scanBloc[line][col+2]))
+    {
+        total +=1;
+    }
+
 }
