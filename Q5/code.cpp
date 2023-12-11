@@ -10,7 +10,6 @@ std::string fileDes;
 std::ifstream inFile;
 std::string curLine;
 int total = 0;
-int curNum;
 int lineSize;
 int gameState = 0;// 0 - 1st line, 1 - middle line, 2 - last line
 int lineNum = 0;
@@ -67,6 +66,13 @@ int main(int argc, char *argv[])
         processLine();
 
         std::cout << "Total: " << total << "\n";
+        if(true)
+        {
+            if(total == 705066)
+            {
+                std::cout << "def worng" << std::endl;
+            }
+        }
         inFile.close();
     }else{
         std::cout << "cannot open file\n";
@@ -107,7 +113,10 @@ bool processLine()
     {
         if(!(std::isdigit(linePoint[1][i]) || linePoint[1][i] == '.'))
         {
-            std::cout << "process symbol:" << linePoint[1][i] << std::endl;
+            if(doLog)
+            {
+                std::cout << "process symbol:" << linePoint[1][i] << std::endl;
+            }
             proSymbol(i);
         }
     }
@@ -211,7 +220,35 @@ void scanBlocAt(int pos)
 
     if(std::isdigit(scanBloc[line][col+2]))
     {
-        total +=1;
+
+        int curNum = 0;
+
+        for(int i=0;i<5;i++)
+        {
+
+            if(std::isdigit(scanBloc[line][col+i]))
+            {
+                curNum *= 10;
+                curNum += (scanBloc[line][col+i] - 48);
+                scanBloc[line][col+i] = 'X';
+            }else if(i == 1){
+                curNum = 0;
+            }else if(i > 2){
+                i = 42;
+            }
+
+            if(doLog)
+            {
+                std::cout << scanBloc[line][col+i];
+            }
+        }
+        if(doLog)
+        {
+            std::cout << std::endl << curNum << std::endl;
+        }
+
+        total += curNum;
+
     }
 
 }
