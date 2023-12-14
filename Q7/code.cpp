@@ -9,8 +9,8 @@ bool doLog = false;
 std::string fileDes;
 std::ifstream inFile;
 std::string curLine;
-char *winNums;
-char *curNums;
+int *winNums;
+int *curNums;
 int total = 0;
 int state = 0;
 
@@ -18,7 +18,9 @@ int state = 0;
 
 
 bool processLine();
-void log(std::string inLog);
+template<typename T>
+void log(T inLog);
+void checkWin();
 
 int main(int argc, char *argv[])
 {
@@ -55,8 +57,8 @@ int main(int argc, char *argv[])
 
 
 }
-
-void log(std::string log)
+template<typename T>
+void log(T log)
 {
     if(doLog)
     {
@@ -66,26 +68,70 @@ void log(std::string log)
 
 bool processLine()
 {
+
     curLine.erase(0,5);
-    while (curLine.size() != 0)
+    state = 0;
+    while (curLine.size() > 0)
     {
+        int fillCount = 0;
         switch (state)
         {
             case 0:
                 if(curLine[0] == ':')
                 {
+                    curNums = new int[curLine.size()/3];
+                    winNums = new int[curLine.size()/3];
                     state = 1;
                     curLine.erase(0,1);
                 }
                 curLine.erase(0,1);
             break;
             case 1:
+                if(curLine[0] == '|')
+                {
+                    log("|---|");
+                    fillCount = 0;
+                    state = 2;
+                    curLine.erase(0,2);
+                }else if(curLine[0] == ' ')
+                {
+                    curLine[0] = '0';
+                }else{
+                    curNums[fillCount] = std::stoi(curLine);
+                    log(curNums[fillCount]);
+                    log('<');
+                    log(curLine[0]);
+                    log(curLine[1]);
+                    log(',');
+                    fillCount++;
+                    curLine.erase(0,3);
+                }
             break;
             case 2:
+                if(curLine[0] == ' ')
+                {
+                    curLine[0] = '0';
+                }
+                //winNums[fillCount] = std::stoi(curLine);
+                log(winNums[fillCount]);
+                log('<');
+                log(curLine[0]);
+                log(curLine[1]);
+                log(',');
+                fillCount++;
+                curLine.erase(0,3);
+
             break;
         
         }
         
     }
+    checkWin();
+    log("\n");
     return true;
+}
+
+void checkWin()
+{
+
 }
