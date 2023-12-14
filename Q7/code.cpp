@@ -11,6 +11,7 @@ std::ifstream inFile;
 std::string curLine;
 int *winNums;
 int *curNums;
+int lineTotal;
 int total = 0;
 int state = 0;
 
@@ -71,9 +72,9 @@ bool processLine()
 
     curLine.erase(0,5);
     state = 0;
+    int fillCount = 0;
     while (curLine.size() > 0)
     {
-        int fillCount = 0;
         switch (state)
         {
             case 0:
@@ -99,9 +100,6 @@ bool processLine()
                 }else{
                     curNums[fillCount] = std::stoi(curLine);
                     log(curNums[fillCount]);
-                    log('<');
-                    log(curLine[0]);
-                    log(curLine[1]);
                     log(',');
                     fillCount++;
                     curLine.erase(0,3);
@@ -112,11 +110,8 @@ bool processLine()
                 {
                     curLine[0] = '0';
                 }
-                //winNums[fillCount] = std::stoi(curLine);
+                winNums[fillCount] = std::stoi(curLine);
                 log(winNums[fillCount]);
-                log('<');
-                log(curLine[0]);
-                log(curLine[1]);
                 log(',');
                 fillCount++;
                 curLine.erase(0,3);
@@ -127,11 +122,36 @@ bool processLine()
         
     }
     checkWin();
+    total += lineTotal;
     log("\n");
     return true;
 }
 
 void checkWin()
 {
+    int runTimes = 0;
+    lineTotal = 0;
+    for(int i=0;winNums[i]!=0;i++)
+    {
+        for(int b=0;curNums[b]!=0;b++)
+        {
+            runTimes++;
+            if(winNums[i] == curNums[b])
+            {
+                if(lineTotal == 0)
+                {
+                    lineTotal += 1;
+                }else{
+                    lineTotal *= 2;
+                }
+                log("match: ");
+                log(i);
+                log(", ");
+                log(b);
 
+            }
+        }
+    }
+    log("\nRan: ");
+    log(runTimes);
 }
