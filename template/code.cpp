@@ -15,6 +15,7 @@ int total = 0;
 
 bool processLine();
 void log(std::string inLog);
+int firstNum(std::string inString);
 
 int main(int argc, char *argv[])
 {
@@ -54,4 +55,19 @@ void log(std::string log)
     {
         std::cout << log;
     }
+}
+
+
+int firstNum(std::string inString)
+{
+    while(inString.size() > 0)
+    {
+        if(std::isdigit(inString[0]))
+        {
+            return std::stoi(inString);
+        }else{
+            inString.erase(0,1);
+        }
+    }
+    return 0;
 }
