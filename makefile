@@ -1,4 +1,7 @@
 CC=g++
 
-%c:%/code.cpp
+test:template/sulution.cpp
+	$(CC) $^ -o build/tempTesta
+
+%c:%/sulution.cpp
 	$(CC) $^ -o build/$@
