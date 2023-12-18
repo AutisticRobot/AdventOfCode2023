@@ -91,6 +91,8 @@ int firstNum(std::string inString)
 int selfTest()
 {
     //splitString test
+    /* soooooo much left to learn about strings to get to barly 
+    work how I intent it. will use a different method entirly instead.
     int length;
     std::string *testSplitString;
     splitString("test-this", '-', length, testSplitString);
@@ -100,10 +102,14 @@ int selfTest()
         std::cout << "splitString fail :" << testSplitString[0] << std::endl;
         return 1;
     }
+    */
+
 
     return externalTest();
 }
 
+// super fucky
+/*
 int splitString(std::string instring, char delim, int &outLength, std::string *outStrings)
 {
     int secs = 1;
@@ -114,27 +120,36 @@ int splitString(std::string instring, char delim, int &outLength, std::string *o
             secs++;
         }
     }
-    std::string output[secs];
+    log(secs);
+    //std::string output[secs];
+    outStrings = new std::string[secs];
     for(int i=0;i<secs;i++)
     {
-        output[i] = instring;
+        outStrings[i] = " ";
     }
     secs = 0;// to keep record of curent open index in output
 
+    log("sepae: |");
     for(int i=0;instring.size()>0;i++)
     {
         if(instring[0] != delim)
         {
-            output[secs][i] = instring[0];
+            outStrings[secs][i] = instring[0];
 
+            log(outStrings[secs]);
         }else{
             secs++;
-            i = 0;
+            i = -1;
         }
         instring.erase(0,1);
     }
 
+    log("|  end");
+    //log(output[0][0]-0);
     outLength = secs++;
-    outStrings = output;
+    //outStrings = output;
+    //log(output);
+    log(outStrings);
     return 0;
 }
+*/
