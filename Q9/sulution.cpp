@@ -28,7 +28,7 @@ bool processLine()
 
     for(int i=0;curLine.size()>0;i++)
     {
-        std::string tmp;
+        int tmp;
         switch (state)
         {
             case 0:
@@ -37,7 +37,7 @@ bool processLine()
                     if(startNum)
                     {
                         tmp = firstNum(curLine);
-                        log(firstNum(curLine));
+                        log(tmp);
                         log(' ');
                         startNum = false;
                     }
@@ -45,17 +45,30 @@ bool processLine()
                 }else{
                     startNum = true;
                 }
-                state = 1;
             break;
 
             case 1:
+                if(std::isdigit(curLine[0]))
+                {
+                    if(startNum)
+                    {
+                        tmp = firstNum(curLine);
+                        log(tmp);
+                        log(' ');
+                        startNum = false;
+                    }
+
+                }else{
+                    startNum = true;
+                }
 
             break;
 
         }
 
-            curLine.erase(0,1);
+        curLine.erase(0,1);
     }
+    state = 1;
     log("\n");
     return true;
 }
