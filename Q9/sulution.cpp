@@ -1,9 +1,9 @@
 #include "code.cpp"
 #include <cctype>
 
-int *sorArr[24];
-int *desArr[24];
-int length = 24;
+int sorArr[24] = {0};
+int desArr[24] = {0};
+int length = 0;
 int state = 0;
 bool startNum = true;
 
@@ -37,6 +37,8 @@ bool processLine()
                     if(startNum)
                     {
                         tmp = firstNum(curLine);
+                        sorArr[length] = tmp;
+                        length++;
                         log(tmp);
                         log(' ');
                         startNum = false;
