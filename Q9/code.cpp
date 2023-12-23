@@ -21,6 +21,7 @@ template<typename T>
 void log(T inLog);
 int firstNum(std::string inString);
 int splitString(std::string instring, char delim, int &outLength, std::string *outStrings);
+void endFunc();
 
 int main(int argc, char *argv[])
 {
@@ -53,7 +54,7 @@ int main(int argc, char *argv[])
             processLine();
         }
 
-
+        endFunc();
 
         std::cout << "Total: " << total << "\n";
         inFile.close();
