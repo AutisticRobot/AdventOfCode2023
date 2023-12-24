@@ -10,17 +10,17 @@ bool doLog = false;
 std::string fileDes = "gTest";
 std::ifstream inFile;
 std::string curLine;
-int total = 0;
+long int total = 0;
 
 
 
-int selfTest();
-int externalTest();// function for the user to declare to be tested in selfTest() function;
+long int selfTest();
+long int externalTest();// function for the user to declare to be tested in selfTest() function;
 bool processLine();
 template<typename T>
 void log(T inLog);
-int firstNum(std::string inString);
-int splitString(std::string instring, char delim, int &outLength, std::string *outStrings);
+long int firstNum(std::string inString);
+long int splitString(std::string instring, char delim, long int &outLength, std::string *outStrings);
 void endFunc();
 
 int main(int argc, char *argv[])
@@ -75,26 +75,36 @@ void log(T log)
 }
 
 
-int firstNum(std::string inString)
+long int firstNum(std::string inString)
 {
+    bool foundInt = false;
+    long int out = 0;
     while(inString.size() > 0)
     {
         if(std::isdigit(inString[0]))
         {
-            return std::stoi(inString);
+            foundInt = true;
+            out *= 10;
+            out += inString[0] - 48;
+            inString.erase(0,1);
+
         }else{
+            if(foundInt)
+            {
+                return out;
+            }
             inString.erase(0,1);
         }
     }
-    return 0;
+    return out;
 }
 
-int selfTest()
+long int selfTest()
 {
     //splitString test
     /* soooooo much left to learn about strings to get to barly 
     work how I intent it. will use a different method entirly instead.
-    int length;
+    long int length;
     std::string *testSplitString;
     splitString("test-this", '-', length, testSplitString);
     log(testSplitString[0]);
@@ -111,10 +121,10 @@ int selfTest()
 
 // super fucky
 /*
-int splitString(std::string instring, char delim, int &outLength, std::string *outStrings)
+long int splitString(std::string instring, char delim, long int &outLength, std::string *outStrings)
 {
-    int secs = 1;
-    for(int i=0;i<instring.size();i++)
+    long int secs = 1;
+    for(long int i=0;i<instring.size();i++)
     {
         if(instring[i] == delim)
         {
@@ -124,14 +134,14 @@ int splitString(std::string instring, char delim, int &outLength, std::string *o
     log(secs);
     //std::string output[secs];
     outStrings = new std::string[secs];
-    for(int i=0;i<secs;i++)
+    for(long int i=0;i<secs;i++)
     {
         outStrings[i] = " ";
     }
     secs = 0;// to keep record of curent open index in output
 
     log("sepae: |");
-    for(int i=0;instring.size()>0;i++)
+    for(long int i=0;instring.size()>0;i++)
     {
         if(instring[0] != delim)
         {

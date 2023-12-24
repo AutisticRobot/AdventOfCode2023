@@ -1,9 +1,9 @@
 #include "code.cpp"
 #include <cctype>
 
-int sorArr[24] = {0};
-int desArr[24] = {0};
-int tranArr[3] = {0};//des,sor,rang
+long int sorArr[30] = {0};
+long int desArr[30] = {0};
+long int tranArr[3] = {0};//des,sor,rang
 int length = -1;
 int state = 0;
 bool startNum = true;
@@ -31,9 +31,10 @@ bool processLine()
     }
 
     int pos = 0;
-    for(int i=0;curLine.size()>0;i++)
+    startNum = true;
+    for(long int i=0;curLine.size()>0;i++)
     {
-        int tmp;
+        long int tmp;
         switch (state)
         {
             case 0:
@@ -44,7 +45,7 @@ bool processLine()
                         length++;
                         tmp = firstNum(curLine);
                         sorArr[length] = tmp;
-                        log(sorArr[length]);
+                        log(tmp);
                         log(' ');
                         startNum = false;
                         hasNum = true;
@@ -63,7 +64,7 @@ bool processLine()
                         tmp = firstNum(curLine);
                         tranArr[pos] = tmp;
                         log(tranArr[pos]);
-                        log(pos);
+                        log(',');
                         startNum = false;
                         pos++;
                         hasNum = true;
@@ -78,7 +79,7 @@ bool processLine()
         }
 
         curLine.erase(0,1);
-    }/*
+    }
     //log(length);
     log("pos: ");
     log(pos);
@@ -88,12 +89,23 @@ bool processLine()
         tranArr[2] = 0;
 
         log(tranArr[2]);
-    }*/
+    }
     pos = 0;
     state = 1;
     if(!hasNum)
     {
         log("translaation");
+        tranArr[0] = 0;
+        tranArr[1] = 0;
+        tranArr[2] = 0;
+        //log sorArr
+        //for(long int i=0;i<=length;i++)
+        //{
+        //    log(',');
+        //    log(sorArr[i]);
+        //    log('>');
+        //    log(desArr[i]);
+        //}
     }
     log("\n");
 
@@ -101,16 +113,16 @@ bool processLine()
 
     for(int i=0;i<=length;i++)
     {
-        int num = sorArr[i];
+        long int num = sorArr[i];
         //log(tranArr[1] <= num);
-        if(tranArr[1] <= num && num <= (tranArr[1] + tranArr[2]))
+        if((tranArr[1] <= num) && (num <= (tranArr[1] + tranArr[2])) && !(tranArr[0] == tranArr[1]) && num != 0)
         {
+            log("(");
+            log(num);
             desArr[i] = num - tranArr[1] + tranArr[0];
-            //log("(");
-            //log(desArr[i]);
-            //log(",");
-            //log(i);
-            //log(".");
+            log(",");
+            log(desArr[i]);
+            log(")");
             sorArr[i] = 0;
         }
     }
@@ -132,6 +144,7 @@ void resetArr(bool hasNum)
             if(desArr[i] != 0)
             {
                 sorArr[i] = desArr[i];
+                desArr[i] = 0;
             }
         }
     }
@@ -141,7 +154,7 @@ void resetArr(bool hasNum)
 void endFunc()
 {
     resetArr(false);
-    int low = sorArr[0];
+    long int low = sorArr[0];
     for(int i=0;i<=length;i++)
     {
         log(sorArr[i]);
@@ -155,7 +168,7 @@ void endFunc()
 }
 
 
-int externalTest()
+long int externalTest()
 {
     return 0;
 }
